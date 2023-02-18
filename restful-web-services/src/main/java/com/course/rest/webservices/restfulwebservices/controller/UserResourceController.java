@@ -3,9 +3,7 @@ package com.course.rest.webservices.restfulwebservices.controller;
 import com.course.rest.webservices.restfulwebservices.model.User;
 import com.course.rest.webservices.restfulwebservices.service.UserDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,12 +14,17 @@ public class UserResourceController {
     private UserDaoService userDaoService;
 
     @GetMapping("/users")
-    public List<User> retrieveAllUsers(){
+    public List<User> retrieveAllUsers() {
         return userDaoService.findAll();
     }
 
     @GetMapping("/users/{id}")
-    public User retrieveUser(@PathVariable Integer id){
+    public User retrieveUser(@PathVariable Integer id) {
         return userDaoService.findOne(id);
+    }
+
+    @PostMapping("/users")
+    public void createUser(@RequestBody User user) {
+        userDaoService.save(user);
     }
 }

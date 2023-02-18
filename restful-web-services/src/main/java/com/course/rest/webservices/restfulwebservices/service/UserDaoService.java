@@ -12,20 +12,22 @@ import java.util.function.Predicate;
 public class UserDaoService {
 
     private static List<User> users = new ArrayList<>();
-
+    private static int userCount = 0;
     static {
-        users.add(new User(1, "Adam", LocalDate.now().minusYears(30)));
-        users.add(new User(2, "Idris", LocalDate.now().minusYears(28)));
-        users.add(new User(3, "Nuh", LocalDate.now().minusYears(27)));
+        users.add(new User(userCount++, "Adam", LocalDate.now().minusYears(30)));
+        users.add(new User(userCount++, "Idris", LocalDate.now().minusYears(28)));
+        users.add(new User(userCount++, "Nuh", LocalDate.now().minusYears(27)));
     }
 
     public List<User> findAll() {
         return users;
     }
 
- /* public User save(User user) {
-
-    } */
+    public User save(User user) {
+        user.setId(userCount++);
+        users.add(user);
+        return user;
+    }
 
     public User findOne(Integer id) {
         Predicate<? super User> predicate = user -> user.getId().equals(id);

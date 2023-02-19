@@ -1,6 +1,7 @@
 package com.course.rest.webservices.restfulwebservices.controller;
 
 import com.course.rest.webservices.restfulwebservices.exception.UserNotFoundException;
+import com.course.rest.webservices.restfulwebservices.model.Post;
 import com.course.rest.webservices.restfulwebservices.model.User;
 import com.course.rest.webservices.restfulwebservices.repository.UserRepository;
 import com.course.rest.webservices.restfulwebservices.service.UserDaoService;
@@ -54,5 +55,16 @@ public class UserJpaResourceController {
     @DeleteMapping("/jpa/users/{id}")
     public void deleteUser(@PathVariable Integer id) {
         userRepository.deleteById(id);
+    }
+
+    @GetMapping("/jpa/users/{id}/posts")
+    public List<Post> retrievePostsForUser(@PathVariable int id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("id: " + id);
+        }
+
+        return user.get().getPosts();
     }
 }

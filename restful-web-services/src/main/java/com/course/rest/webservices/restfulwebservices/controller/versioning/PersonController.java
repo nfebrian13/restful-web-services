@@ -27,7 +27,7 @@ public class PersonController {
     }
 
     /*
-     * URI Versioning (Digunakan oleh Amazon)
+     * Request Parameter Versioning (Digunakan oleh Amazon)
      * http://localhost:8080/version=1
      * http://localhost:8080/version=2
      *
@@ -40,6 +40,40 @@ public class PersonController {
 
     @GetMapping(path ="/person", params = "version=2")
     public PersonV2 getSecondVersionOfPersonReqParam() {
+        return new PersonV2(new Name("Bob", "Charlie"));
+    }
+
+    /*
+     * Custom Header Versioning (Digunakan oleh Microsoft)
+     * http://localhost:8080/person/header
+     * http://localhost:8080/person/header
+     *
+     * */
+
+    @GetMapping(path ="/person/header", headers = "X-API-VERSION=1")
+    public PersonV1 getFirstVersionOfPersonReqHeader() {
+        return new PersonV1("Bob Charlie");
+    }
+
+    @GetMapping(path ="/person/header", headers = "X-API-VERSION=2")
+    public PersonV2 getSecondVersionOfPersonReqHeader() {
+        return new PersonV2(new Name("Bob", "Charlie"));
+    }
+
+    /*
+     * Media Type Versioning (Digunakan oleh Microsoft)
+     * http://localhost:8080/person/header
+     * http://localhost:8080/person/header
+     *
+     * */
+
+    @GetMapping(path ="/person/accept", produces = "application/vnd.company.app.-v1+json")
+    public PersonV1 getFirstVersionOfPersonMediaTypeVersioning() {
+        return new PersonV1("Bob Charlie");
+    }
+
+    @GetMapping(path ="/person/accept", produces = "application/vnd.company.app.-v2+json")
+    public PersonV2 getSecondVersionOfPersonMediaTypeVersioning() {
         return new PersonV2(new Name("Bob", "Charlie"));
     }
 }

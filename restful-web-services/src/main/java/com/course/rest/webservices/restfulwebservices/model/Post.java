@@ -11,7 +11,7 @@ public class Post {
     @GeneratedValue
     private Integer id;
 
-    @Size(min = 10)
+    @Size(min = 15)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)

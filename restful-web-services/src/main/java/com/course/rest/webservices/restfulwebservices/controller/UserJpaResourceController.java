@@ -84,7 +84,6 @@ public class UserJpaResourceController {
         Post savedPost = postRepository.save(post);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedPost.getId()).toUri();
-
         return ResponseEntity.created(location).build();
     }
 }

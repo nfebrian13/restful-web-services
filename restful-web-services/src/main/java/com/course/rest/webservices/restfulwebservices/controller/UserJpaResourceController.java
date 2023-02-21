@@ -3,6 +3,7 @@ package com.course.rest.webservices.restfulwebservices.controller;
 import com.course.rest.webservices.restfulwebservices.exception.UserNotFoundException;
 import com.course.rest.webservices.restfulwebservices.model.Post;
 import com.course.rest.webservices.restfulwebservices.model.User;
+import com.course.rest.webservices.restfulwebservices.repository.PostRepository;
 import com.course.rest.webservices.restfulwebservices.repository.UserRepository;
 import com.course.rest.webservices.restfulwebservices.service.UserDaoService;
 import jakarta.validation.Valid;
@@ -25,6 +26,9 @@ public class UserJpaResourceController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PostRepository postRepository;
 
     @GetMapping("/jpa/users")
     public List<User> retrieveAllUsers() {
@@ -66,5 +70,21 @@ public class UserJpaResourceController {
         }
 
         return user.get().getPosts();
+    }
+
+    @PostMapping("/jpa/users/{id}/posts")
+    public ResponseEntity<Object> createPostForUser(@PathVariable int id, @Valid @RequestBody Post post) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("id: " + id);
+        }
+
+        post.setUser(user.get());
+        Post savedPost = postRepository.save(post);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedPost.getId()).toUri();
+
+        return ResponseEntity.created(location).build();
     }
 }
